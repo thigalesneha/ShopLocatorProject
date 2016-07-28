@@ -26,7 +26,7 @@ public class ShopLocatorController {
 	@Autowired
 	private ShopRepository repository;    
 	
-	@RequestMapping(method = RequestMethod.POST,value = "/addresses")
+	@RequestMapping(method = RequestMethod.POST,value = "/shops")
 	public ResponseEntity<String> addAddress(@RequestBody ShopDto shopDto){
 		try {
 			repository.addShopAddress(shopDto);
@@ -41,7 +41,7 @@ public class ShopLocatorController {
 		return new ResponseEntity<String>("Resource created",HttpStatus.CREATED);
 	}
 	
-	@RequestMapping(method=RequestMethod.GET,value="/address/{latitude}/{longitude}")
+	@RequestMapping(method=RequestMethod.GET,value="/shops/{latitude}/{longitude}")
 	public ResponseEntity<List<Shop>> getAddress(@RequestParam Double latitude,@RequestParam Double longitude){
 		try {
 			return new ResponseEntity<List<Shop>>(repository.getNearestShopList(latitude, longitude),HttpStatus.OK);
