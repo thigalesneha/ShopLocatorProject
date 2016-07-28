@@ -2,11 +2,14 @@ package com.javatest.shoplocator.helper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javatest.shoplocator.exception.GoogleResponseException;
 import com.javatest.shoplocator.model.googleresponse.GoogleResponse;
 
 public class GoogleResponseHelper {
@@ -14,13 +17,26 @@ public class GoogleResponseHelper {
 	private static final String URL = "http://maps.googleapis.com/maps/api/geocode/json";
 	
 	
-	public static GoogleResponse getLocationDetails(String address) throws IOException{
-    	URL url = new URL(URL + "?address="+URLEncoder.encode(address, "UTF-8") + "&sensor=false");
-    	URLConnection conn = url.openConnection();
-    	InputStream in = conn.getInputStream() ;
-    	ObjectMapper mapper = new ObjectMapper();
-    	GoogleResponse response = (GoogleResponse)mapper.readValue(in,GoogleResponse.class);
-    	in.close();
+	public static GoogleResponse getLocationDetails(String address) throws GoogleResponseException{
+		
+    	URL url = null;
+    	GoogleResponse response = null;
+		try {
+			url = new URL(URL + "?address="+URLEncoder.encode(address, "UTF-8") + "&sensor=false");
+		} catch (MalformedURLException |UnsupportedEncodingException e) {
+			throw new GoogleResponseException(e.getMessage());
+		} 
+    	URLConnection conn;
+		try {
+			conn = url.openConnection();
+			InputStream in = conn.getInputStream() ;
+	    	ObjectMapper mapper = new ObjectMapper();
+	    	response = (GoogleResponse)mapper.readValue(in,GoogleResponse.class);
+	    	in.close();
+		} catch (IOException e) {
+			throw new GoogleResponseException(e.getMessage());
+		}
+    	
     	return response;
     }
     
