@@ -4,6 +4,7 @@ Highlights:
 2. Maven used to ease build process & output is jar file
 3. Swagger is enabled to test web service
 4. Test cases are written
+5. Nearest distance is considered as 1km
 
 After taking clone , please build project to generate jar 
 
